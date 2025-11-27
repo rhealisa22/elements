@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather Ticket</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            padding: 40px 20px;
+            background-color: #fff;
+        }
+
+        #content {
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 40px;
+            background-color: #fff;
+        }
+
+        .location {
+            font-size: 14px;
+            font-weight: bold;
+            letter-spacing: 2px;
+            margin-bottom: 30px;
+            color: #000;
+        }
+
+        .temp-container {
+            display: flex;
+            align-items: baseline;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .temperature {
+            font-size: 100px;
+            font-weight: bold;
+            color: #000;
+            line-height: 1;
+        }
+
+        .degree-symbol {
+            width: 20px;
+            height: 20px;
+            background-color: #ff3b30;
+            border-radius: 50%;
+        }
+
+        .unit {
+            font-size: 80px;
+            font-weight: bold;
+            color: #000;
+        }
+
+        .condition {
+            font-size: 14px;
+            color: #000;
+            margin-bottom: 20px;
+            letter-spacing: 1px;
+        }
+
+        .info-item {
+            font-size: 14px;
+            color: #000;
+            margin-bottom: 4px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .info-label {
+            font-weight: bold;
+        }
+
+        .info-value {
+            font-weight: normal;
+        }
+
+        .toggle-container {
+            margin-top: 4px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .toggle-switch {
+            position: relative;
+            width: 40px;
+            height: 20px;
+            background-color: #ccc;
+            border-radius: 34px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            border: none;
+            padding: 0;
+        }
+
+        .toggle-switch.active {
+            background-color: #000;
+        }
+
+        .toggle-switch::after {
+            content: '';
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            background-color: white;
+            border-radius: 50%;
+            top: 2px;
+            left: 2px;
+            transition: left 0.3s;
+        }
+
+        .toggle-switch.active::after {
+            left: 21px;
+        }
+
+        .toggle-label {
+            font-size: 16px;
+            font-weight: bold;
+            color: #000;
+            letter-spacing: 1px;
+        }
+
+        .container {
+            display: inline-flex;
+            flex-direction: row;
+            width: 100%;
+            justify-content: space-between;
+            margin-bottom: 20px;
+
+        }
+    </style>
+</head>
+<body>
+    <div id="content">
+        <div class="location" id="location">Loading...</div>
+        <div class="temp-container">
+            <div class="temperature" id="temperature">--</div>
+            <div class="degree-symbol"></div>
+            <div class="unit" id="unit">F</div>
+        </div>
+        <div class="container">
+            <div class="condition" id="condition">Loading...</div>
+            <div class="info-item">
+            <span class="info-value" id="humidity">--%</span>
+            </div>
+            <div class="info-item">
+            <span class="info-value" id="windSpeed">-- mph</span>
+        </div>
+        </div>
+        <div class="toggle-container">
+            <span class="toggle-label" id="toggleLabel">°C</span>
+            <button class="toggle-switch active" id="toggleSwitch" onclick="toggleTemperature()"></button>
+            <span class="toggle-label" id="toggleLabel">°F</span>
+        </div>
+    </div>
+    <script src="app.js"></script>
+</body>
+</html>
