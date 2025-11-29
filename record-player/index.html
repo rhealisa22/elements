@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vintage Record Player</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <div class="record-player-wrapper">
+            <div class="player-board">
+                <!-- Vinyl Record -->
+                <div class="vinyl-container">
+                    <div class="vinyl">
+                        <div class="vinyl-center"></div>
+                        <div class="vinyl-grooves"></div>
+                    </div>
+                    <div class="vinyl-label"></div>
+                </div>
+
+                <!-- Tonearm -->
+                <div class="tonearm-base"></div>
+                <div class="tonearm" id="tonearm">
+                    <div class="tonearm-head"></div>
+                    <div class="needle"></div>
+                </div>
+
+                <!-- Speaker ports -->
+                <div class="speaker-port port-1"></div>
+                <div class="speaker-port port-2"></div>
+                <div class="speaker-port port-3"></div>
+
+                <!-- Knobs -->
+                <div class="control-knob knob-1"></div>
+                <div class="control-knob knob-2"></div>
+            </div>
+
+        </div>
+
+        <!-- Audio Player (hidden) -->
+        <audio id="audioPlayer" crossorigin="anonymous"></audio>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

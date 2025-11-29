@@ -1,0 +1,343 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Fira Mono', monospace;
+    background: linear-gradient(135deg, #3a3a3a 0%, #1a1a1a 100%);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #e0e0e0;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Grainy texture overlay */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: 
+        url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><filter id="noise"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="4" seed="2" /></filter><rect width="100" height="100" fill="%23000000" /><rect width="100" height="100" fill="%23ffffff" opacity="0.02" filter="url(%23noise)" /></svg>');
+    pointer-events: none;
+    z-index: 1;
+}
+
+.container {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    padding: 40px 20px;
+}
+
+.record-player-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
+
+/* Main Player Board - More realistic turntable design */
+.player-board {
+    position: relative;
+    width: 500px;
+    height: 360px;
+    background: linear-gradient(135deg, #a8956b 0%, #8b7355 50%, #6b5344 100%);
+    border: 12px solid #4a3a2a;
+    border-radius: 4px;
+    box-shadow: 
+        inset 0 1px 3px rgba(255, 255, 255, 0.15),
+        inset 0 -1px 3px rgba(0, 0, 0, 0.3),
+        0 30px 60px rgba(0, 0, 0, 0.9),
+        0 0 30px rgba(0, 0, 0, 0.7);
+    overflow: visible;
+    cursor: pointer;
+}
+
+/* Wood grain texture */
+.player-board::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: 
+        repeating-linear-gradient(90deg, transparent 0px, transparent 1px, rgba(0, 0, 0, 0.08) 1px, rgba(0, 0, 0, 0.08) 2px),
+        repeating-linear-gradient(0deg, transparent 0px, transparent 3px, rgba(255, 255, 255, 0.03) 3px, rgba(255, 255, 255, 0.03) 4px);
+    pointer-events: none;
+    z-index: 1;
+    border-radius: 2px;
+}
+
+.player-board::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(ellipse at 50% 0%, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 2;
+    border-radius: 2px;
+}
+
+/* Vinyl Record Container */
+.vinyl-container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 280px;
+    height: 280px;
+    z-index: 15;
+}
+
+.vinyl {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at 35% 35%, #2a2a2a, #0a0a0a);
+    border-radius: 50%;
+    box-shadow: 
+        inset -8px -8px 20px rgba(0, 0, 0, 0.9),
+        inset 5px 5px 15px rgba(50, 50, 50, 0.4),
+        0 15px 40px rgba(0, 0, 0, 0.95);
+    animation: vinyl-spin 6s linear infinite;
+    animation-play-state: paused;
+}
+
+.vinyl.playing {
+    animation-play-state: running;
+}
+
+@keyframes vinyl-spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Vinyl grooves */
+.vinyl-grooves {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background: 
+        repeating-radial-gradient(
+            circle,
+            transparent 0px,
+            transparent 10px,
+            rgba(255, 255, 255, 0.02) 10px,
+            rgba(255, 255, 255, 0.02) 11px
+        );
+}
+
+/* Vinyl center */
+.vinyl-center {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 70px;
+    height: 70px;
+    background: radial-gradient(circle at 30% 30%, #c17a4a, #8b5a35);
+    border-radius: 50%;
+    box-shadow: 
+        inset -2px -2px 8px rgba(0, 0, 0, 0.6),
+        inset 2px 2px 5px rgba(255, 255, 255, 0.2),
+        0 4px 12px rgba(0, 0, 0, 0.8);
+    z-index: 3;
+    border: 3px solid #6b4a2a;
+}
+
+/* Vinyl label */
+.vinyl-label {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 55px;
+    height: 55px;
+    background: linear-gradient(135deg, #7b6a5a, #9b8a7a);
+    border-radius: 50%;
+    box-shadow: 
+        inset 0 2px 4px rgba(255, 255, 255, 0.3),
+        0 2px 6px rgba(0, 0, 0, 0.6);
+    z-index: 2;
+    border: 1px solid #5a4a3a;
+}
+
+/* Tonearm Base - more realistic */
+.tonearm-base {
+    position: absolute;
+    bottom: 35px;
+    right: 50px;
+    width: 20px;
+    height: 50px;
+    background: linear-gradient(90deg, #1a1a1a, #2a2a2a, #1a1a1a);
+    border-radius: 10px;
+    box-shadow: 
+        0 6px 12px rgba(0, 0, 0, 0.9),
+        inset 1px 0 2px rgba(255, 255, 255, 0.2),
+        inset -1px 0 2px rgba(0, 0, 0, 0.5);
+    z-index: 18;
+    border: 1px solid #0a0a0a;
+}
+
+/* Tonearm */
+.tonearm {
+    position: absolute;
+    bottom: 85px;
+    right: 55px;
+    width: 180px;
+    height: 12px;
+    background: linear-gradient(90deg, #4a4a4a 0%, #3a3a3a 50%, #2a2a2a 100%);
+    border-radius: 6px;
+    transform-origin: right center;
+    transform: rotateZ(-50deg);
+    transition: transform 0.7s cubic-bezier(0.34, 1.56, 0.64, 1);
+    z-index: 20;
+    box-shadow: 
+        0 4px 12px rgba(0, 0, 0, 0.9),
+        inset 0 1px 3px rgba(255, 255, 255, 0.15);
+}
+
+.tonearm.down {
+    transform: rotateZ(-15deg);
+}
+
+/* Tonearm Head - stylus cartridge */
+.tonearm-head {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 24px;
+    height: 16px;
+    background: linear-gradient(90deg, #5a5a5a, #3a3a3a);
+    border-radius: 4px;
+    box-shadow: 
+        0 3px 8px rgba(0, 0, 0, 0.8),
+        inset 0 1px 2px rgba(255, 255, 255, 0.15);
+    z-index: 1;
+}
+
+/* Needle - stylus */
+.needle {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    width: 2.5px;
+    height: 25px;
+    background: linear-gradient(180deg, #e8e8e8, #a8a8a8);
+    border-radius: 1px;
+    transform: translateY(-50%);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.7);
+    z-index: 2;
+}
+
+/* Speaker Ports */
+.speaker-port {
+    position: absolute;
+    background: radial-gradient(circle at 30% 30%, #0a0a0a, #1a1a1a);
+    border-radius: 6px;
+    box-shadow: inset 0 3px 8px rgba(0, 0, 0, 0.95);
+}
+
+.port-1 {
+    top: 40px;
+    left: 40px;
+    width: 50px;
+    height: 50px;
+}
+
+.port-2 {
+    top: 40px;
+    left: 105px;
+    width: 50px;
+    height: 50px;
+}
+
+.port-3 {
+    top: 40px;
+    left: 170px;
+    width: 50px;
+    height: 50px;
+}
+
+/* Control Knobs - more realistic */
+.control-knob {
+    position: absolute;
+    width: 45px;
+    height: 45px;
+    background: radial-gradient(circle at 35% 35%, #5a5a5a, #1a1a1a);
+    border-radius: 50%;
+    box-shadow: 
+        0 6px 12px rgba(0, 0, 0, 0.9),
+        inset -3px -3px 8px rgba(0, 0, 0, 0.7),
+        inset 3px 3px 8px rgba(255, 255, 255, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid #0a0a0a;
+}
+
+.control-knob::before {
+    content: '';
+    position: absolute;
+    width: 3px;
+    height: 14px;
+    background: linear-gradient(180deg, #d0d0d0, #808080);
+    border-radius: 2px;
+    top: 4px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
+}
+
+.control-knob::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    box-shadow: inset 0 1px 3px rgba(255, 255, 255, 0.2);
+}
+
+.knob-1 {
+    bottom: 50px;
+    left: 50px;
+}
+
+.knob-2 {
+    bottom: 50px;
+    left: 120px;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+    .player-board {
+        width: 350px;
+        height: 260px;
+    }
+
+    .vinyl-container {
+        width: 200px;
+        height: 200px;
+    }
+
+    .tonearm {
+        width: 140px;
+    }
+
+}
