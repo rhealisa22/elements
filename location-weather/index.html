@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Weather Ticket</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Mono:wght@400;700&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -12,61 +15,62 @@
         }
 
         body {
-            font-family: 'Arial', sans-serif;
+            font-family: 'Fira Mono', sans-serif;
             padding: 40px 20px;
         }
 
         #content {
-            max-width: 500px;
+            max-width: 100%;
             margin: 0 auto;
-            padding: 40px;        
+            padding: 10px;        
         }
 
         .location {
             font-size: 14px;
-            font-weight: bold;
-            letter-spacing: 2px;
-            margin-bottom: 30px;
-            color: #000;
+            font-weight: normal;
+            letter-spacing: 1px;
+            color: #fff;
         }
 
         .temp-container {
+            flex-direction: row;
             display: flex;
-            align-items: baseline;
+            align-items: center;
             gap: 15px;
             margin-bottom: 30px;
         }
 
         .temperature {
-            font-size: 100px;
+            font-size: 54px;
             font-weight: bold;
-            color: #000;
+            color: #fff;
             line-height: 1;
         }
 
         .degree-symbol {
-            width: 20px;
-            height: 20px;
+            margin-top: 10px;
+            width: 11px;
+            height: 11px;
             background-color: #ff3b30;
             border-radius: 50%;
         }
 
         .unit {
-            font-size: 80px;
+            font-size: 54px;
             font-weight: bold;
-            color: #000;
+            color: #fff;
         }
 
         .condition {
             font-size: 14px;
-            color: #000;
+            color: #fff;
             margin-bottom: 20px;
             letter-spacing: 1px;
         }
 
         .info-item {
             font-size: 14px;
-            color: #000;
+            color: #fff;
             margin-bottom: 4px;
             display: flex;
             justify-content: space-between;
@@ -100,7 +104,7 @@
         }
 
         .toggle-switch.active {
-            background-color: #000;
+            background-color: #ff3b30;
         }
 
         .toggle-switch::after {
@@ -122,7 +126,7 @@
         .toggle-label {
             font-size: 16px;
             font-weight: bold;
-            color: #000;
+            color: #fff;
             letter-spacing: 1px;
         }
 
@@ -141,8 +145,15 @@
         <div class="location" id="location">Loading...</div>
         <div class="temp-container">
             <div class="temperature" id="temperature">--</div>
+            <div spacing="10px" style="display: flex; align-items: top;">
             <div class="degree-symbol"></div>
             <div class="unit" id="unit">F</div>
+            </div>
+            <div>
+                <div class="toggle-container">
+                <button class="toggle-switch active" id="toggleSwitch" onclick="toggleTemperature()"></button>
+                </div>
+            </div>
         </div>
         <div class="container">
             <div class="condition" id="condition">Loading...</div>
@@ -153,11 +164,7 @@
             <span class="info-value" id="windSpeed">-- mph</span>
         </div>
         </div>
-        <div class="toggle-container">
-            <span class="toggle-label" id="toggleLabel">°C</span>
-            <button class="toggle-switch active" id="toggleSwitch" onclick="toggleTemperature()"></button>
-            <span class="toggle-label" id="toggleLabel">°F</span>
-        </div>
+        
     </div>
     <script src="app.js"></script>
 </body>
