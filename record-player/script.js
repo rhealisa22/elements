@@ -21,24 +21,86 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     
     // Click to toggle play/stop
-    vinylContainer.addEventListener('click', (e) => {
-        e.stopPropagation();
-        if (isPlaying) {
-            // Stop music on second click
-            stopMusic();
-            tonearm.classList.remove('down');
-            vinyl.classList.remove('playing');
-            isPlaying = false;
-            console.log('🛑 Music stopped (clicked)');
-        } else {
-            // Play music on first click
-            playMusic();
-            tonearm.classList.add('down');
-            vinyl.classList.add('playing');
-            isPlaying = true;
-            console.log('🎵 Music started (clicked)');
-        }
-    });
+    // vinylContainer.addEventListener('click', (e) => {
+    //     e.stopPropagation();
+    //     if (isPlaying) {
+    //         // Stop music on second click
+    //         stopMusic();
+    //         tonearm.classList.remove('down');
+    //         vinyl.classList.remove('playing');
+    //         isPlaying = false;
+    //         console.log('🛑 Music stopped (clicked)');
+    //     } else {
+    //         // Play music on first click
+    //         playMusic();
+    //         tonearm.classList.add('down');
+    //         vinyl.classList.add('playing');
+    //         isPlaying = true;
+    //         console.log('🎵 Music started (clicked)');
+    //     }
+    // });
+
+    // Replace the vinylContainer click and touchend handlers with this:
+vinylContainer.addEventListener('click', handleVinylClick);
+vinylContainer.addEventListener('touchend', handleVinylTouch);
+
+function handleVinylClick(e) {
+    e.stopPropagation();
+    togglePlayback();
+}
+
+function handleVinylTouch(e) {
+    e.preventDefault(); // Prevents duplicate click event
+    e.stopPropagation();
+    togglePlayback();
+}
+
+function togglePlayback() {
+    const tonearm = document.getElementById('tonearm');
+    const vinyl = document.getElementById('vinyl');
+    
+    if (isPlaying) {
+        stopMusic();
+        tonearm.classList.remove('down');
+        vinyl.classList.remove('playing');
+        isPlaying = false;
+        console.log('🛑 Music stopped');
+    } else {
+        playMusic();
+        tonearm.classList.add('down');
+        vinyl.classList.add('playing');
+        isPlaying = true;
+        console.log('🎵 Music started');
+    }
+}
+
+    // Add these alongside your existing click listener:
+    // document.addEventListener('touchstart', () => {
+    //     userInteracted = true;
+    //     console.log('✓ User interaction detected (touch)');
+    // });
+
+    // document.addEventListener('touchmove', () => {
+    //     userInteracted = true;
+    // });
+
+    // vinylContainer.addEventListener('touchend', (e) => {
+    // e.preventDefault(); // Prevents the 300ms click delay
+    // e.stopPropagation();
+        
+    //     // Same logic as your click handler
+    //     if (isPlaying) {
+    //         stopMusic();
+    //         tonearm.classList.remove('down');
+    //         vinyl.classList.remove('playing');
+    //         isPlaying = false;
+    //     } else {
+    //         playMusic();
+    //         tonearm.classList.add('down');
+    //         vinyl.classList.add('playing');
+    //         isPlaying = true;
+    //     }
+    // });
 
     audioPlayer.addEventListener('playing', () => {
         console.log('✓ Audio is playing');
@@ -57,58 +119,114 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
+// async function playMusic() {
+//     try {
+//         console.log('🎵 Fetching track...');
+        
+//         // Fetch from our backend server
+//         const response = await fetch('http://127.0.0.1:3000/api/lofi-track');
+        
+//         if (!response.ok) {
+//             throw new Error(`Failed to fetch track: ${response.status}`);
+//         }
+        
+//         const track = await response.json();
+//         console.log('✓ Got track:', track.title, 'by', track.artist);
+//         console.log('🔗 Audio URL:', track.url);
+        
+//         // Update track info display
+//         document.getElementById('track-title').textContent = 'Playing now - Tessera';
+        
+//         // Set audio source with proxied URL
+//         audioPlayer.src = track.url;
+//         audioPlayer.crossOrigin = "anonymous";
+//         audioPlayer.loop = true;
+//         audioPlayer.volume = 0.3;
+//         audioPlayer.preload = "auto";
+        
+//         // Try to play
+//         console.log('▶️ Attempting to play...');
+//         const playPromise = audioPlayer.play();
+        
+//         if (playPromise !== undefined) {
+//             playPromise
+//                 .then(() => {
+//                     console.log('✓ Now playing:', track.title, 'by', track.artist);
+//                     currentTrack = track;
+//                 })
+//                 .catch(error => {
+//                     console.error('❌ Playback failed:', error.message);
+//                     console.error('Error code:', error.name);
+                    
+//                     // If autoplay blocked, try a simple play on next interaction
+//                     if (error.name === 'NotAllowedError') {
+//                         console.log('⏸️ Autoplay blocked. Click vinyl to play.');
+//                         isPlaying = false;
+//                     }
+//                 });
+//         }
+        
+//     } catch (error) {
+//         console.error('❌ Error fetching track:', error.message);
+//         console.log('⚠️  Make sure the Node.js server is running:');
+//         console.log('   cd /Users/rhea/Documents/GitHub/elements/record-player');
+//         console.log('   node server.js');
+//     }
+// }
+
+// async function playMusic() {
+//     try {
+//         console.log('🎵 Fetching track...');
+        
+//         const response = await fetch('http://127.0.0.1:3000/api/lofi-track');
+        
+//         if (!response.ok) {
+//             throw new Error(`Failed to fetch track: ${response.status}`);
+//         }
+        
+//         const track = await response.json();
+        
+//         // Update track info display
+//         document.getElementById('track-title').textContent = 'Playing now - Tessera';
+        
+//         // IMPORTANT: Load and play in the same user interaction
+//         audioPlayer.src = track.url;
+//         audioPlayer.crossOrigin = "anonymous";
+//         audioPlayer.loop = true;
+//         audioPlayer.volume = 0.3;
+        
+//         // Mobile Safari needs this immediate play call
+//         await audioPlayer.play();
+        
+//         console.log('✓ Now playing:', track.title);
+//         currentTrack = track;
+        
+//     } catch (error) {
+//         console.error('✗ Error:', error.message);
+//         alert('Audio error: ' + error.message); // So you can see the error on mobile
+//     }
+// }
+
 async function playMusic() {
     try {
-        console.log('🎵 Fetching track...');
-        
-        // Fetch from our backend server
-        const response = await fetch('http://127.0.0.1:3000/api/lofi-track');
-        
-        if (!response.ok) {
-            throw new Error(`Failed to fetch track: ${response.status}`);
-        }
-        
-        const track = await response.json();
-        console.log('✓ Got track:', track.title, 'by', track.artist);
-        console.log('🔗 Audio URL:', track.url);
+        console.log('🎵 Playing track...');
         
         // Update track info display
         document.getElementById('track-title').textContent = 'Playing now - Tessera';
         
-        // Set audio source with proxied URL
-        audioPlayer.src = track.url;
-        audioPlayer.crossOrigin = "anonymous";
+        // Load audio directly from Netlify
+        audioPlayer.src = '/music/Relaxing Lofi Tessera.mp3';
         audioPlayer.loop = true;
         audioPlayer.volume = 0.3;
-        audioPlayer.preload = "auto";
         
-        // Try to play
-        console.log('▶️ Attempting to play...');
-        const playPromise = audioPlayer.play();
+        // Play immediately
+        await audioPlayer.play();
         
-        if (playPromise !== undefined) {
-            playPromise
-                .then(() => {
-                    console.log('✓ Now playing:', track.title, 'by', track.artist);
-                    currentTrack = track;
-                })
-                .catch(error => {
-                    console.error('❌ Playback failed:', error.message);
-                    console.error('Error code:', error.name);
-                    
-                    // If autoplay blocked, try a simple play on next interaction
-                    if (error.name === 'NotAllowedError') {
-                        console.log('⏸️ Autoplay blocked. Click vinyl to play.');
-                        isPlaying = false;
-                    }
-                });
-        }
+        console.log('✓ Now playing!');
         
     } catch (error) {
-        console.error('❌ Error fetching track:', error.message);
-        console.log('⚠️  Make sure the Node.js server is running:');
-        console.log('   cd /Users/rhea/Documents/GitHub/elements/record-player');
-        console.log('   node server.js');
+        console.error('✗ Error:', error.message);
+        alert('Audio error: ' + error.message);
     }
 }
 
