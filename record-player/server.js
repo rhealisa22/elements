@@ -1,63 +1,54 @@
 const http = require('http');
-const https = require('https');
+const fs = require('fs');
+const path = require('path');
 const url = require('url');
 
-// Original audio source URLs
-const audioSources = [
-    'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3',
-    'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3',
-    'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3',
-    'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3',
-    'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-5.mp3',
-    'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-6.mp3',
-    'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-7.mp3',
-    'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3',
-    'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-9.mp3',
-    'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-10.mp3'
-];
-
-// Working free audio tracks metadata
+// Local music tracks
 const musicTracks = [
-    { title: 'Ambient Study', artist: 'Kevin MacLeod', index: 0 },
-    { title: 'Relaxing Piano', artist: 'Incompetech', index: 1 },
-    { title: 'Chill Vibes', artist: 'Free Music Archive', index: 2 },
-    { title: 'Night Drive', artist: 'Epidemic Sound', index: 3 },
-    { title: 'Sunset Mood', artist: 'Creative Commons', index: 4 },
-    { title: 'Coffee Shop', artist: 'YouTube Audio Library', index: 5 },
-    { title: 'Focus Music', artist: 'Royalty Free Music', index: 6 },
-    { title: 'Urban Jungle', artist: 'Open Source', index: 7 },
-    { title: 'Dreamy Nights', artist: 'Creative Commons', index: 8 },
-    { title: 'Morning Light', artist: 'Free Music', index: 9 }
+    {
+        id: 1,
+        title: 'Relaxing Lofi',
+        artist: 'Tessera',
+        filename: 'music/Relaxing Lofi Tessera.mp3',
+        duration: 180
+    }
 ];
 
 function getRandomTrack() {
     return musicTracks[Math.floor(Math.random() * musicTracks.length)];
 }
 
-// Proxy audio through our server to add CORS headers
-function proxyAudio(sourceUrl, res) {
-    const isHttps = sourceUrl.startsWith('https');
-    const protocol = isHttps ? https : http;
+// Proxy audio with CORS headers
+function serveAudioFile(filename, res) {
+    const filepath = path.join(__dirname, filename);
     
-    protocol.get(sourceUrl, (proxyRes) => {
+    console.log(`📡 Serving: ${filepath}`);
+    
+    fs.stat(filepath, (err, stats) => {
+        if (err) {
+            console.error(`❌ File not found: ${filename}`);
+            res.writeHead(404, { 'Content-Type': 'text/plain' });
+            res.end('Audio file not found');
+            return;
+        }
+        
         // Add CORS headers
         res.setHeader('Access-Control-Allow-Origin', '*');
         res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
         res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Range');
         res.setHeader('Accept-Ranges', 'bytes');
+        res.setHeader('Content-Type', 'audio/mpeg');
+        res.setHeader('Content-Length', stats.size);
         
-        // Copy content headers
-        res.setHeader('Content-Type', proxyRes.headers['content-type'] || 'audio/mpeg');
-        if (proxyRes.headers['content-length']) {
-            res.setHeader('Content-Length', proxyRes.headers['content-length']);
-        }
+        res.writeHead(200);
         
-        res.writeHead(proxyRes.statusCode);
-        proxyRes.pipe(res);
-    }).on('error', (err) => {
-        console.error('Proxy error:', err);
-        res.writeHead(500);
-        res.end('Proxy error');
+        const stream = fs.createReadStream(filepath);
+        stream.pipe(res);
+        
+        stream.on('error', (err) => {
+            console.error('Stream error:', err);
+            res.end();
+        });
     });
 }
 
@@ -81,26 +72,30 @@ const server = http.createServer((req, res) => {
         console.log('\n🎧 Request for track...');
         
         const track = getRandomTrack();
-        const sourceUrl = audioSources[track.index];
         console.log(`✓ Now Playing: "${track.title}" by ${track.artist}`);
         
         res.setHeader('Content-Type', 'application/json');
         res.writeHead(200);
         res.end(JSON.stringify({
+            id: track.id,
             title: track.title,
             artist: track.artist,
-            url: `http://localhost:3000/api/audio/${track.index}`
+            url: `http://127.0.0.1:3000/api/audio/${track.id}`,
+            image: track.image,
+            duration: track.duration
         }));
 
     } else if (pathname.startsWith('/api/audio/')) {
-        // Proxy audio files through this server
-        const index = parseInt(pathname.split('/').pop());
-        if (index >= 0 && index < audioSources.length) {
-            console.log(`🔊 Proxying audio ${index}...`);
-            proxyAudio(audioSources[index], res);
+        // Serve local audio file
+        const trackId = parseInt(pathname.split('/').pop());
+        const track = musicTracks.find(t => t.id === trackId);
+        
+        if (track) {
+            console.log(`🔊 Streaming: ${track.title}`);
+            serveAudioFile(track.filename, res);
         } else {
-            res.writeHead(404);
-            res.end('Not found');
+            res.writeHead(404, { 'Content-Type': 'text/plain' });
+            res.end('Track not found');
         }
 
     } else if (pathname === '/health') {
@@ -109,7 +104,7 @@ const server = http.createServer((req, res) => {
         res.end(JSON.stringify({ 
             status: 'ok', 
             tracks_available: musicTracks.length,
-            mode: 'CORS-Proxied Audio'
+            mode: 'Royalty-Free Music (No API Key Required)'
         }));
     } else if (pathname === '/tracks') {
         res.setHeader('Content-Type', 'application/json');
@@ -123,9 +118,10 @@ const server = http.createServer((req, res) => {
 });
 
 const PORT = 3000;
-server.listen(PORT, () => {
+server.listen(PORT, '0.0.0.0', () => {
     console.log(`\n🎵 Record Player Server`);
     console.log(`   Running on http://localhost:${PORT}`);
-    console.log(`   Endpoint: /api/lofi-track`);
-    console.log(`   Available Tracks: ${musicTracks.length}\n`);
+    console.log(`   Also accessible at http://127.0.0.1:${PORT}`);
+    console.log(`   Available Tracks: ${musicTracks.length}`);
+    console.log(`   Endpoint: /api/lofi-track\n`);
 });

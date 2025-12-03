@@ -1,31 +1,42 @@
 let isPlaying = false;
 let currentTrack = null;
 let audioPlayer = null;
+let userInteracted = false;
 
 // Initialize
 document.addEventListener('DOMContentLoaded', () => {
-    const playerBoard = document.querySelector('.player-board');
+    const vinylContainer = document.querySelector('.vinyl-container');
     const tonearm = document.getElementById('tonearm');
-    const vinyl = document.querySelector('.vinyl');
+    const vinyl = document.getElementById('vinyl');
     audioPlayer = document.getElementById('audioPlayer');
     
-    playerBoard.addEventListener('mouseenter', () => {
-        if (!isPlaying) {
-            playMusic();
-            tonearm.classList.add('down');
-            vinyl.classList.add('playing');
-            isPlaying = true;
-            console.log('🎵 Music started');
-        }
+    // Allow audio autoplay after any user interaction
+    document.addEventListener('click', () => {
+        userInteracted = true;
+        console.log('✓ User interaction detected');
     });
 
-    playerBoard.addEventListener('mouseleave', () => {
+    document.addEventListener('mousemove', () => {
+        userInteracted = true;
+    });
+    
+    // Click to toggle play/stop
+    vinylContainer.addEventListener('click', (e) => {
+        e.stopPropagation();
         if (isPlaying) {
+            // Stop music on second click
             stopMusic();
             tonearm.classList.remove('down');
             vinyl.classList.remove('playing');
             isPlaying = false;
-            console.log('🛑 Music stopped');
+            console.log('🛑 Music stopped (clicked)');
+        } else {
+            // Play music on first click
+            playMusic();
+            tonearm.classList.add('down');
+            vinyl.classList.add('playing');
+            isPlaying = true;
+            console.log('🎵 Music started (clicked)');
         }
     });
 
@@ -40,6 +51,10 @@ document.addEventListener('DOMContentLoaded', () => {
     audioPlayer.addEventListener('canplay', () => {
         console.log('✓ Audio can play');
     });
+
+    audioPlayer.addEventListener('loadstart', () => {
+        console.log('📡 Loading audio...');
+    });
 });
 
 async function playMusic() {
@@ -47,7 +62,7 @@ async function playMusic() {
         console.log('🎵 Fetching track...');
         
         // Fetch from our backend server
-        const response = await fetch('http://localhost:3000/api/lofi-track');
+        const response = await fetch('http://127.0.0.1:3000/api/lofi-track');
         
         if (!response.ok) {
             throw new Error(`Failed to fetch track: ${response.status}`);
@@ -57,14 +72,20 @@ async function playMusic() {
         console.log('✓ Got track:', track.title, 'by', track.artist);
         console.log('🔗 Audio URL:', track.url);
         
-        // Set audio source
+        // Update track info display
+        document.getElementById('track-title').textContent = 'Playing now - Tessera';
+        
+        // Set audio source with proxied URL
         audioPlayer.src = track.url;
         audioPlayer.crossOrigin = "anonymous";
         audioPlayer.loop = true;
-        audioPlayer.volume = 0.7;
+        audioPlayer.volume = 0.3;
+        audioPlayer.preload = "auto";
         
-        // Attempt to play
+        // Try to play
+        console.log('▶️ Attempting to play...');
         const playPromise = audioPlayer.play();
+        
         if (playPromise !== undefined) {
             playPromise
                 .then(() => {
@@ -74,6 +95,12 @@ async function playMusic() {
                 .catch(error => {
                     console.error('❌ Playback failed:', error.message);
                     console.error('Error code:', error.name);
+                    
+                    // If autoplay blocked, try a simple play on next interaction
+                    if (error.name === 'NotAllowedError') {
+                        console.log('⏸️ Autoplay blocked. Click vinyl to play.');
+                        isPlaying = false;
+                    }
                 });
         }
         
