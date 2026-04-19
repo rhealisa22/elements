@@ -1,0 +1,156 @@
+/* ===== SKY ===== */
+
+.pixel-sky {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 64px;
+  overflow: hidden;
+  image-rendering: pixelated;
+}
+
+.pixel-sky.day {
+  background: linear-gradient(
+    180deg,
+    var(--sky-day) 0%,
+    var(--horizon) 100%
+  );
+}
+
+.pixel-sky.night {
+  background: linear-gradient(
+    180deg,
+    #0A0A1A 0%,
+    var(--sky-deep) 40%,
+    var(--sky-mid) 100%
+  );
+}
+
+.pixel-sky.dimmed {
+  opacity: 0.7;
+}
+
+/* ===== STARS ===== */
+
+.stars-layer {
+  position: absolute;
+  inset: 0;
+}
+
+.star {
+  position: absolute;
+  width: 2px;
+  height: 2px;
+  background: #FFF;
+  animation: twinkle 2s steps(2) infinite;
+}
+
+.s1 { top: 12%; left: 15%; animation-delay: 0s; }
+.s2 { top: 8%; left: 45%; animation-delay: 0.5s; }
+.s3 { top: 20%; left: 72%; animation-delay: 1s; }
+.s4 { top: 5%; left: 88%; animation-delay: 1.5s; }
+.s5 { top: 28%; left: 30%; animation-delay: 0.3s; width: 3px; height: 3px; }
+.s6 { top: 15%; left: 60%; animation-delay: 0.8s; }
+.s7 { top: 35%; left: 10%; animation-delay: 1.2s; }
+.s8 { top: 10%; left: 25%; animation-delay: 0.6s; width: 3px; height: 3px; }
+
+@keyframes twinkle {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+/* ===== CLOUDS ===== */
+
+.clouds-layer {
+  position: absolute;
+  inset: 0;
+}
+
+.pixel-cloud {
+  position: absolute;
+  background: rgba(255, 255, 255, 0.7);
+  image-rendering: pixelated;
+}
+
+/* Build clouds out of pixel blocks */
+.pixel-cloud::before,
+.pixel-cloud::after {
+  content: '';
+  position: absolute;
+  background: inherit;
+}
+
+.cloud-1 {
+  top: 18%;
+  width: 32px;
+  height: 8px;
+  animation: cloud-scroll 20s linear infinite;
+}
+.cloud-1::before {
+  width: 16px;
+  height: 8px;
+  top: -8px;
+  left: 8px;
+}
+.cloud-1::after {
+  width: 8px;
+  height: 8px;
+  top: -8px;
+  left: 4px;
+}
+
+.cloud-2 {
+  top: 30%;
+  width: 48px;
+  height: 8px;
+  animation: cloud-scroll 28s linear infinite;
+  animation-delay: -8s;
+  opacity: 0.5;
+}
+.cloud-2::before {
+  width: 24px;
+  height: 8px;
+  top: -8px;
+  left: 12px;
+}
+.cloud-2::after {
+  width: 16px;
+  height: 8px;
+  top: -16px;
+  left: 16px;
+}
+
+.cloud-3 {
+  top: 10%;
+  width: 24px;
+  height: 8px;
+  animation: cloud-scroll 25s linear infinite;
+  animation-delay: -15s;
+  opacity: 0.6;
+}
+.cloud-3::before {
+  width: 12px;
+  height: 8px;
+  top: -8px;
+  left: 6px;
+}
+
+@keyframes cloud-scroll {
+  0% { left: 110%; }
+  100% { left: -60px; }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .pixel-cloud {
+    animation: none !important;
+  }
+  .cloud-1 { left: 20%; }
+  .cloud-2 { left: 55%; }
+  .cloud-3 { left: 80%; }
+  .star {
+    animation: none !important;
+    opacity: 0.8;
+  }
+}

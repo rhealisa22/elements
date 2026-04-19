@@ -1,0 +1,71 @@
+PixelFlight Tracker - Features Overview
+=======================================
+
+A real-time flight tracking dashboard with a retro pixel-art aesthetic.
+Built with React, TypeScript, Zustand, and Vite.
+
+CORE FEATURES
+-------------
+
+  Add & Track Flights
+  - Add flights by entering a flight number and departure date
+  - Track up to 8 flights simultaneously on a responsive grid
+  - Assign optional custom labels to flights (e.g. "Dad's flight home")
+  - Edit labels inline on any tracked flight card
+  - Remove flights with a two-click confirmation
+  - Flights persist in localStorage across page refreshes
+
+  Import Flights
+  - Import flights from email files (.eml) or screenshots (.png, .jpg)
+  - Drag-and-drop or file browser upload
+  - OCR-powered screenshot reading via Tesseract.js
+  - Email parsing extracts flight details from confirmation emails
+  - Auto-detects flight numbers, airports, dates, and times
+  - Shows confidence level (high/medium) for each detected flight
+  - Deduplicates results and flags already-tracked flights
+  - Batch import multiple flights at once
+
+  Live Flight Status
+  - Real-time status updates via AviationStack API
+  - Six flight statuses: Scheduled, Boarding, In Air, Landed, Delayed, Cancelled
+  - Color-coded status badges with text labels
+  - Auto-ticks elapsed time every 30 seconds
+  - Displays departure/arrival times (actual times when available)
+  - In-flight progress bar showing time flown vs. time remaining
+
+  Animated Pixel-Art Planes
+  - Each flight card has a living pixel-art aircraft
+  - Five animation states matching real flight phases:
+      IDLE      - Plane sits on runway with engine idle loop
+      TAKEOFF   - Liftoff sequence when departure is detected
+      CRUISING  - Plane floats at altitude with parallax clouds
+      LANDING   - Touchdown sequence with animation callbacks
+      LANDED    - Settled on runway, pulsing "LANDED" confirmation
+
+  Dynamic Sky
+  - Day/night sky background based on flight timing
+  - Daytime: blue gradient with drifting pixel clouds
+  - Nighttime: dark sky with twinkling pixel stars
+  - Sky state updates based on departure, arrival, and in-flight progress
+  - Landed cards dim slightly to visually distinguish completed flights
+
+  Settings
+  - Configure your own AviationStack API key
+  - Without a key, demo/mock flights are available for testing
+  - API key stored locally in the browser
+
+TECH STACK
+----------
+  React 19 + TypeScript
+  Zustand for state management
+  Vite for dev server and builds
+  Tesseract.js for OCR (screenshot import)
+  CSS animations for all pixel-art sprite motion
+  localStorage for flight and settings persistence
+  No backend required - runs entirely in the browser
+
+ACCESSIBILITY
+-------------
+  ARIA live regions on flight cards for screen reader announcements
+  Keyboard-navigable controls
+  Status indicated by both color and text labels
