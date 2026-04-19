@@ -1,0 +1,346 @@
+/* ===== PLANE WRAPPER & ANIMATION STATES ===== */
+
+.pixel-plane-wrapper {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 96px;
+  height: 64px;
+  z-index: 10;
+  image-rendering: pixelated;
+}
+
+.pixel-plane-wrapper.idle {
+  animation: idle-wobble 2s steps(2) infinite;
+}
+
+.pixel-plane-wrapper.takeoff {
+  animation: takeoff-rise 3s ease-out forwards;
+}
+
+.pixel-plane-wrapper.cruising {
+  bottom: auto;
+  top: 35%;
+  animation: cruise-float 4s ease-in-out infinite;
+}
+
+.pixel-plane-wrapper.landing {
+  top: 35%;
+  bottom: auto;
+  animation: landing-descend 3s ease-in forwards;
+}
+
+.pixel-plane-wrapper.landed {
+  bottom: 20px;
+  animation: idle-wobble 3s steps(2) infinite;
+  opacity: 0.85;
+}
+
+.pixel-plane-wrapper.cancelled {
+  filter: grayscale(1);
+  opacity: 0.5;
+}
+
+/* ===== KEYFRAMES ===== */
+
+@keyframes idle-wobble {
+  0%, 100% { transform: translateX(-50%) translateY(0); }
+  50% { transform: translateX(-50%) translateY(-1px); }
+}
+
+@keyframes takeoff-rise {
+  0% {
+    bottom: 20px;
+    transform: translateX(-50%) rotate(0deg);
+  }
+  20% {
+    bottom: 20px;
+    transform: translateX(-40%) rotate(0deg);
+  }
+  40% {
+    bottom: 20px;
+    transform: translateX(-30%) rotate(-15deg);
+  }
+  100% {
+    bottom: 55%;
+    transform: translateX(-50%) rotate(-8deg);
+  }
+}
+
+@keyframes cruise-float {
+  0%, 100% { transform: translateX(-50%) translateY(0); }
+  50% { transform: translateX(-50%) translateY(-4px); }
+}
+
+@keyframes landing-descend {
+  0% {
+    top: 35%;
+    transform: translateX(-50%) rotate(-5deg);
+  }
+  50% {
+    top: 55%;
+    transform: translateX(-50%) rotate(5deg);
+  }
+  85% {
+    top: calc(100% - 88px);
+    transform: translateX(-50%) rotate(2deg);
+  }
+  100% {
+    top: calc(100% - 84px);
+    transform: translateX(-50%) rotate(0deg);
+  }
+}
+
+/* ===== SHADOW ===== */
+
+.plane-shadow {
+  position: absolute;
+  bottom: -30px;
+  left: 50%;
+  width: 60px;
+  height: 8px;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 50%;
+  transform: translateX(-50%);
+  image-rendering: pixelated;
+}
+
+.plane-shadow.cruising {
+  width: 30px;
+  height: 4px;
+  opacity: 0.3;
+  bottom: auto;
+  /* shadow stays on ground conceptually */
+}
+
+.plane-shadow.takeoff {
+  animation: shadow-shrink 3s ease-out forwards;
+}
+
+.plane-shadow.landing {
+  animation: shadow-grow 3s ease-in forwards;
+}
+
+@keyframes shadow-shrink {
+  0% { width: 60px; height: 8px; opacity: 0.3; }
+  100% { width: 24px; height: 4px; opacity: 0.15; }
+}
+
+@keyframes shadow-grow {
+  0% { width: 24px; height: 4px; opacity: 0.15; }
+  100% { width: 60px; height: 8px; opacity: 0.3; }
+}
+
+/* ===== PIXEL ART PLANE (CSS) ===== */
+
+.pixel-plane-sprite {
+  position: relative;
+  width: 96px;
+  height: 64px;
+}
+
+/* Fuselage */
+.fuselage {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.fuselage-body {
+  position: absolute;
+  top: 22px;
+  left: 16px;
+  width: 64px;
+  height: 20px;
+  background: #E8E8EC;
+  border: 2px solid #B0B0C0;
+  border-radius: 2px;
+  image-rendering: pixelated;
+}
+
+.fuselage-nose {
+  position: absolute;
+  top: 24px;
+  left: 76px;
+  width: 16px;
+  height: 16px;
+  background: #E8E8EC;
+  border-right: 2px solid #B0B0C0;
+  border-top: 2px solid #B0B0C0;
+  border-bottom: 2px solid #B0B0C0;
+  clip-path: polygon(0 0, 100% 30%, 100% 70%, 0 100%);
+}
+
+.fuselage-tail {
+  position: absolute;
+  top: 16px;
+  left: 8px;
+  width: 12px;
+  height: 12px;
+  background: #D0D0E0;
+  clip-path: polygon(100% 100%, 0 0, 100% 0);
+}
+
+.cockpit-window {
+  position: absolute;
+  top: 28px;
+  left: 74px;
+  width: 8px;
+  height: 8px;
+  background: #5BA3C9;
+  border: 1px solid #3A7AA0;
+}
+
+.window {
+  position: absolute;
+  top: 28px;
+  width: 4px;
+  height: 4px;
+  background: #5BA3C9;
+  border: 1px solid #3A7AA0;
+}
+
+.w1 { left: 64px; }
+.w2 { left: 56px; }
+.w3 { left: 48px; }
+.w4 { left: 40px; }
+.w5 { left: 32px; }
+
+/* Wings */
+.wing {
+  position: absolute;
+  left: 36px;
+  width: 32px;
+  height: 6px;
+  background: #D0D0DC;
+  border: 1px solid #9A9AB0;
+}
+
+.wing-top {
+  top: 14px;
+  transform: skewX(-10deg);
+}
+
+.wing-bottom {
+  top: 44px;
+  transform: skewX(10deg);
+}
+
+/* Engines */
+.engine {
+  position: absolute;
+  left: 42px;
+  width: 10px;
+  height: 8px;
+  background: #8A8A9C;
+  border: 1px solid #5A5A6C;
+  border-radius: 1px;
+}
+
+.engine::after {
+  content: '';
+  position: absolute;
+  right: -4px;
+  top: 1px;
+  width: 4px;
+  height: 6px;
+  background: #6A6A7C;
+  animation: engine-idle 0.5s steps(2) infinite;
+}
+
+.engine.fast::after {
+  animation: engine-fast 0.125s steps(2) infinite;
+  background: #9AC;
+}
+
+.engine-top { top: 12px; }
+.engine-bottom { top: 44px; }
+
+@keyframes engine-idle {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
+}
+
+@keyframes engine-fast {
+  0%, 100% { opacity: 0.8; width: 6px; }
+  50% { opacity: 1; width: 8px; }
+}
+
+/* Tail fin */
+.tail-fin {
+  position: absolute;
+  top: 10px;
+  left: 12px;
+  width: 8px;
+  height: 18px;
+  background: #C23B22;
+  border: 1px solid #8A2010;
+  clip-path: polygon(0 100%, 50% 0, 100% 100%);
+}
+
+/* Dust puff on landing */
+.dust-puff {
+  position: absolute;
+  bottom: -24px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  animation: puff 0.8s ease-out 2.2s forwards;
+}
+
+.dust-puff::before,
+.dust-puff::after {
+  content: '';
+  position: absolute;
+  background: rgba(200, 180, 140, 0.6);
+  border-radius: 50%;
+}
+
+.dust-puff::before {
+  width: 12px;
+  height: 8px;
+  left: -16px;
+  bottom: 0;
+}
+
+.dust-puff::after {
+  width: 16px;
+  height: 10px;
+  right: -16px;
+  bottom: 0;
+}
+
+@keyframes puff {
+  0% {
+    opacity: 0;
+    transform: translateX(-50%) scale(0.5);
+  }
+  30% {
+    opacity: 1;
+    transform: translateX(-50%) scale(1.5);
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(-50%) scale(2.5) translateY(-8px);
+  }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .pixel-plane-wrapper,
+  .pixel-plane-wrapper.idle,
+  .pixel-plane-wrapper.takeoff,
+  .pixel-plane-wrapper.cruising,
+  .pixel-plane-wrapper.landing,
+  .pixel-plane-wrapper.landed {
+    animation: none !important;
+  }
+  .engine::after {
+    animation: none !important;
+  }
+  .dust-puff {
+    display: none;
+  }
+}

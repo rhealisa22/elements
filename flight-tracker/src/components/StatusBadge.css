@@ -1,0 +1,49 @@
+.status-badge {
+  display: inline-block;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 7px;
+  padding: 4px 8px;
+  border: 2px solid;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  image-rendering: pixelated;
+}
+
+.badge-default {
+  background: var(--panel-bg);
+  border-color: var(--panel-border);
+  color: var(--text-dim);
+}
+
+.badge-blue {
+  background: #1A3A5A;
+  border-color: var(--status-blue);
+  color: var(--status-blue);
+}
+
+.badge-green {
+  background: #1A3A1A;
+  border-color: var(--status-green);
+  color: var(--status-green);
+}
+
+.badge-amber {
+  background: #3A2A0A;
+  border-color: var(--status-amber);
+  color: var(--status-amber);
+}
+
+.badge-red {
+  background: #3A1A1A;
+  border-color: var(--status-red);
+  color: var(--status-red);
+}
+
+.status-badge.pulse {
+  animation: badge-pulse 1.5s ease-in-out 3;
+}
+
+@keyframes badge-pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+}

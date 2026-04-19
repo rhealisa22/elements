@@ -1,0 +1,33 @@
+.progress-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 6px;
+}
+
+.progress-segments {
+  display: flex;
+  gap: 2px;
+  flex: 1;
+}
+
+.progress-segment {
+  height: 8px;
+  flex: 1;
+  background: var(--panel-border);
+  border: 1px solid #2A2A3C;
+  image-rendering: pixelated;
+}
+
+.progress-segment.filled {
+  background: var(--status-blue);
+  border-color: #3A7AC0;
+}
+
+.progress-text {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 7px;
+  color: var(--text-dim);
+  min-width: 36px;
+  text-align: right;
+}

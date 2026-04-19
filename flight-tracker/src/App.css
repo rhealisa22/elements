@@ -1,0 +1,175 @@
+/* ===== APP LAYOUT ===== */
+
+.app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: #1A1A2E;
+  color: #F5E6C8;
+}
+
+/* Header */
+.app-header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  padding: 12px 20px;
+}
+
+.header-content {
+  max-width: 1400px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.header-logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.logo-plane {
+  font-size: 24px;
+  filter: none;
+  animation: logo-bob 3s ease-in-out infinite;
+}
+
+@keyframes logo-bob {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-3px); }
+}
+
+.logo-text {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 16px;
+  color: var(--warm-cream);
+  letter-spacing: 2px;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.flight-count {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 8px;
+  color: var(--text-dim);
+}
+
+/* Main */
+.app-main {
+  flex: 1;
+  padding: 20px;
+  max-width: 1440px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+/* Flight grid */
+.flight-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 20px;
+}
+
+@media (min-width: 900px) {
+  .flight-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1400px) {
+  .flight-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* Empty state */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  gap: 20px;
+  text-align: center;
+}
+
+.empty-plane-art {
+  position: relative;
+  width: 200px;
+  height: 100px;
+}
+
+.empty-runway {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 12px;
+  background: var(--tarmac);
+  border-top: 2px solid var(--tarmac-light);
+}
+
+.empty-runway::before {
+  content: '';
+  position: absolute;
+  top: 4px;
+  left: 20%;
+  right: 20%;
+  height: 2px;
+  background: repeating-linear-gradient(
+    90deg,
+    var(--tarmac-mark) 0px,
+    var(--tarmac-mark) 12px,
+    transparent 12px,
+    transparent 24px
+  );
+}
+
+.empty-plane {
+  position: absolute;
+  bottom: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 48px;
+  opacity: 0.3;
+  animation: empty-bob 4s ease-in-out infinite;
+}
+
+@keyframes empty-bob {
+  0%, 100% { transform: translateX(-50%) translateY(0); }
+  50% { transform: translateX(-50%) translateY(-4px); }
+}
+
+.empty-title {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 14px;
+  color: var(--warm-cream);
+}
+
+.empty-subtitle {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 8px;
+  color: var(--text-dim);
+  line-height: 1.8;
+}
+
+/* Responsive header */
+@media (max-width: 600px) {
+  .logo-text {
+    font-size: 11px;
+  }
+  .header-content {
+    flex-direction: column;
+    gap: 10px;
+  }
+  .header-right {
+    width: 100%;
+    justify-content: space-between;
+  }
+}
